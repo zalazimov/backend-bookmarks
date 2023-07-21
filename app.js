@@ -14,14 +14,14 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
+//Creating middleware to designate a path via my controller
+//and showing its route
+app.use("/bookmarks", bookmarksController);
+
 //Routes
 app.get("/", (req, res) => {
   res.send("Welcome to Bookmarks App");
 });
-
-//Creating middleware to designate a path via my controller
-//and showing its route
-app.use("/bookmarks", bookmarksController);
 
 // 404 page route
 app.get("*", (req, res) => {
