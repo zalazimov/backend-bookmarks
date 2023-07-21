@@ -71,7 +71,6 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Update bookmark by id
-// UPDATE
 router.put("/:id", checkName, checkBoolean, validateURL, async (req, res) => {
   try {
     const updatdBookmark = await updateBookmarkById(req.params.id, req.body);
