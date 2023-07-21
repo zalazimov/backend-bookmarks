@@ -5,9 +5,15 @@ const {
   getAllBookmarks,
   getBookmarkById,
   createBookmark,
+  deleteBookmarkById,
+  updateBookmarkById,
 } = require("../queries/bookmarks.js");
 
-const { checkName, checkBoolean } = require("../validations/checkBookmarks.js");
+const {
+  checkName,
+  checkBoolean,
+  validateURL,
+} = require("../validations/checkBookmarks.js");
 
 // Index
 // Get all bookmarks list
@@ -39,10 +45,42 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Create a bookmark entry
 router.post("/", checkBoolean, checkName, async (req, res) => {
   try {
     const bookmark = await createBookmark(req.body);
     res.json(bookmark);
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
+});
+
+// Delete a bookmark by id
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedBookmark = await deleteBookmarkById(req.params.id);
+
+    if (deletedBookmark.length === 0) {
+      res.status(404).json("Bookmark not found");
+    } else {
+      res.json(deletedBookmark[0]);
+    }
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
+});
+
+// Update bookmark by id
+// UPDATE
+router.put("/:id", checkName, checkBoolean, validateURL, async (req, res) => {
+  try {
+    const updatdBookmark = await updateBookmarkById(req.params.id, req.body);
+
+    if (updatdBookmark.length === 0) {
+      res.status(404).json("The bookmark you're searching for is not found");
+    } else {
+      res.json(updatdBookmark[0]);
+    }
   } catch (e) {
     res.status(400).json({ error: e });
   }
